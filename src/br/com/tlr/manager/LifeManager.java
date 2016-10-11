@@ -36,7 +36,7 @@ public class LifeManager implements Animable {
             float calcX = 800 - 25*x - x*3;
             hearts.add(new Heart(50, 50, calcX, 0));
         }
-        timeManager.start(300);
+        timeManager.start(3000);
     }
 
     public void subHeart(String msg) throws GameOverException {
@@ -71,6 +71,10 @@ public class LifeManager implements Animable {
      */
     public int getNumHearts() {
         return numHearts;
+    }
+    
+    public boolean isBeingHurt(){
+        return timeManager.isRunning();
     }
 
     /**

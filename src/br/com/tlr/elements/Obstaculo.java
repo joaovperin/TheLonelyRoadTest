@@ -4,6 +4,7 @@
  */
 package br.com.tlr.elements;
 
+import br.com.tlr.manager.CollisionManager;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
@@ -14,13 +15,18 @@ public class Obstaculo extends StaticElement {
 
     private final Shape shape;
 
-    public Obstaculo() {
-        super(175f, 175f, 100f, 100f);
+    public Obstaculo(CollisionManager collisionManager) {
+        super(175f, 175f, 100f, 100f, collisionManager, true);
         shape = new Rectangle(getX(), getY(), getWidth(), getWidth());
     }
 
     public Shape getShape() {
         return shape;
+    }
+    
+    @Override
+    public String toString(){
+        return "Obstáculo";
     }
 
 }

@@ -6,9 +6,13 @@
 package br.com.tlr.elements;
 
 import br.com.tlr.encapsulation.AnimationEnum;
+import br.com.tlr.exception.CollisionException;
 import br.com.tlr.exception.GameOverException;
 import br.com.tlr.factory.AnimationFactory;
 import br.com.tlr.manager.CollisionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -21,14 +25,12 @@ import org.newdawn.slick.command.Command;
  */
 public class Player3 extends Character {
 
-    private final CollisionManager collisionManager = new CollisionManager();
-
     // LER ISSO!
     //http://zetcode.com/tutorials/javagamestutorial/collision/
     // https://github.com/dmitrykolesnikovich/featurea/tree/master/engines/platformer
     // https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169   SAT
 //        http://blog.sklambert.com/html5-canvas-game-2d-collision-detection/
-    Obstaculo hole = new Obstaculo();
+//    Obstaculo hole = new Obstaculo(collisionManager);
     //private final List<SpacialElement> spacialElements = new ArrayList<>();
     //spacialElements.add(new Obstaculo());
 
@@ -38,9 +40,10 @@ public class Player3 extends Character {
      * @param animationName Nome do arquivo de animações do jogador
      * @param numFrames Número de frames por sprite
      * @param movableArea Dimensões máximas do jogador
+     * @param collisionManager
      */
-    public Player3(String animationName, int numFrames, float[][] movableArea) {
-        super(animationName, numFrames, movableArea);
+    public Player3(String animationName, int numFrames, float[][] movableArea, CollisionManager collisionManager) {
+        super(animationName, numFrames, movableArea, collisionManager);
     }
 
     /**
@@ -70,10 +73,19 @@ public class Player3 extends Character {
     @Override
     public void update(GameContainer gc, int delta) throws SlickException, GameOverException {
         // Checa se recebeu ataques
-        if (collisionManager.isColliding(hole.getBounding(), getPisando())) {
-            hurt("Caiu no buraco :/");
-        } else if (comandos.isAtkCmd() && collisionManager.isColliding(shape, getBounding())) {
+//        if (collisionManager.isColliding(hole.getBounding(), getPisando())) {
+//            hurt("Caiu no buraco :/");
+//        } else if (comandos.isAtkCmd() && collisionManager.isColliding(shape, getBounding())) {
+        if (comandos.isAtkCmd() && collisionManager.isColliding(shape, getBounding())) {
             hurt("ACERTOU O ATK!!");
+        }
+        try {
+            if (!isBeingHurt()){
+                collisionManager.checkForPlayerCollisions(this);
+                collisionManager.checkForCollisions(this);
+            }
+        } catch (CollisionException e) {
+            hurt(e.getObject());
         }
         animacoes.stop();
         // Ações de movimentação - DOWN
@@ -118,14 +130,18 @@ public class Player3 extends Character {
             shape.setCenterY(mPos.y);
             g.fill(shape);
         }
-        g.draw(hole.getShape());
-        g.fill(hole.getShape());
         g.draw(getPisando());
         g.draw(getBounding());
         g.draw(shape);
         // Move e renderiza as animações
         animacoes.move(pos);
         animacoes.render(gc, g);
+        // Se está tomando dano
+        if (isBeingHurt()){
+            g.setColor(Color.yellow);
+            g.drawString("tomou dano", 350, 250);
+            g.setColor(Color.black);
+        }
         lifeManager.render(gc, g);
     }
 

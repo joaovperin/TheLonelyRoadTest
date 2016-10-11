@@ -7,8 +7,8 @@ package br.com.tlr.game.states;
 import br.com.tlr.elements.Animable;
 import br.com.tlr.elements.Obstaculo;
 import br.com.tlr.elements.Player3;
-import br.com.tlr.elements.SpacialElement;
 import br.com.tlr.exception.GameOverException;
+import br.com.tlr.manager.CollisionManager;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
@@ -27,12 +27,14 @@ import org.newdawn.slick.tiled.TiledMap;
  */
 public class LevelGrass extends BasicGameState {
 
+    public final CollisionManager collisionManager = new CollisionManager();
     /** Mapa principal do jogo -> Grama */
     private TiledMap grassMap;
 
     private final List<Animable> elements = new ArrayList<>();
     /** Transições de entrada e saída do estágio */
     private Transition trIn, trOut;
+    Obstaculo hole = new Obstaculo(collisionManager);
 
     @Override
     public int getID() {
@@ -62,7 +64,8 @@ public class LevelGrass extends BasicGameState {
         trOut.init(this, game.getState(StatesEnum.GRASS_MAP.getId()));
 
         // Instancia e carrega sprites e animações do jogador 3
-        elements.add(new Player3("player.png", 4, movableArea));
+        collisionManager.add(hole);
+        elements.add(new Player3("player.png", 4, movableArea, collisionManager));
         // Inicializa as entidades animáveis
         for (Animable a : elements) {
             a.load(container);
@@ -79,6 +82,7 @@ public class LevelGrass extends BasicGameState {
      */
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        
         try {
             // Atualiza as entidades animáveis
             for (Animable a : elements) {
@@ -106,6 +110,9 @@ public class LevelGrass extends BasicGameState {
         for (Animable a : elements) {
             a.render(container, g);
         }
+        
+        g.draw(hole.getShape());
+        g.fill(hole.getShape());
     }
 
 }

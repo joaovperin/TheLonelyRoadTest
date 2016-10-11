@@ -5,6 +5,8 @@
  */
 package br.com.tlr.elements;
 
+import br.com.tlr.manager.CollisionManager;
+
 /**
  * * Classe abstrata para todos os itens que podem se mover
  *
@@ -17,9 +19,10 @@ public abstract class Movable extends SpacialElement {
      *
      * @param width
      * @param height
+     * @param collisionManager
      */
-    public Movable(float width, float height) {
-        super(width, height);
+    public Movable(float width, float height, CollisionManager collisionManager) {
+        super(width, height, collisionManager);
     }
 
     /**

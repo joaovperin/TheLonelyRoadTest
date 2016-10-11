@@ -24,15 +24,15 @@ public class Heart extends Movable implements Animable {
     private boolean isAlive;
 
     public Heart() {
-        super(50, 50);
+        this(50, 50);
     }
 
     public Heart(int wid, int hei) {
-        super(wid, hei);
+        this(wid, hei, 0, 0);
     }
 
     public Heart(float wid, float hei, float x, float y) {
-        super(wid, hei);
+        super(wid, hei, null);
         setX(x);
         setY(y);
     }

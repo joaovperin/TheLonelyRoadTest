@@ -4,6 +4,8 @@
  */
 package br.com.tlr.elements;
 
+import br.com.tlr.manager.CollisionManager;
+import java.io.Serializable;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -11,7 +13,7 @@ import org.newdawn.slick.geom.Vector2f;
 /**
  * Classe abstrata para representar elementos que ocupam espaço
  */
-public abstract class SpacialElement {
+public abstract class SpacialElement implements Serializable {
 
     /** Posição atual do objeto */
     protected Vector2f pos = new Vector2f();
@@ -19,18 +21,40 @@ public abstract class SpacialElement {
     protected final float height;
     /** Largura */
     protected final float width;
+    /** Manager de colisões */
+    protected final CollisionManager collisionManager;
+    /** dsda */
+    protected boolean justCheckFoot;
 
     /**
      * Construtor padrão que recebe a altura e largura do objeto para inicializar
      *
      * @param width
      * @param height
+     * @param collisionManager
      */
-    public SpacialElement(float width, float height) {
+    public SpacialElement(float width, float height, CollisionManager collisionManager) {
+        this(width, height, collisionManager, false);
+    }
+    
+    /**
+     * Construtor padrão que recebe a altura e largura do objeto para inicializar
+     *
+     * @param width
+     * @param height
+     * @param collisionManager
+     */
+    public SpacialElement(float width, float height, CollisionManager collisionManager, boolean justCheckFoot) {
         this.width = width;
         this.height = height;
+        this.collisionManager = collisionManager;
+        this.justCheckFoot = justCheckFoot;
     }
-
+    
+    public boolean isJustCheckFoot(){
+        return justCheckFoot;
+    }
+    
     /**
      * Retorna a posição atual no eixo X
      *
@@ -81,7 +105,7 @@ public abstract class SpacialElement {
      *
      * @return Shape
      */
-    protected Shape getBounding(){
+    public Shape getBounding(){
         return new RoundedRectangle(getX(), getY(), getWidth()-2, getHeight()-1, 30f);
     }
 

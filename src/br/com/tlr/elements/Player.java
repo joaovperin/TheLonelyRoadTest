@@ -56,7 +56,7 @@ public class Player extends Character {
      * @param movableArea Dimensões máximas do jogador
      */
     public Player(String animationName, int numFrames, float[][] movableArea) {
-        super(animationName, numFrames, movableArea);
+        super(animationName, numFrames, movableArea, null);
         this.animationName = animationName;
         this.numFrames = numFrames;
         this.duration = 200;

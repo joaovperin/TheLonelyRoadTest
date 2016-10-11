@@ -4,6 +4,7 @@
  */
 package br.com.tlr.elements;
 
+import br.com.tlr.manager.CollisionManager;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -14,15 +15,41 @@ import org.newdawn.slick.geom.Vector2f;
 public abstract class StaticElement extends SpacialElement {
 
     /**
-     * Construtor padrão que recebe a altura e largura do objeto para inicializar
+     * Construtor padrão que recebe a altura e largura do objeto para
+     * inicializar
      *
      * @param width
      * @param height
      */
-    public StaticElement(float width, float height) {
-        super(width, height);
-        pos.x = 0f;
-        pos.y = 0f;
+    public StaticElement(float width, float height, CollisionManager collisionManager) {
+        this(0, 0, width, height, collisionManager);
+    }
+
+    /**
+     * Construtor que recebe as coordenadas X e Y do objeto
+     *
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
+    public StaticElement(float x, float y, float width, float height, CollisionManager collisionManager) {
+        this(x, y, width, height, collisionManager, false);
+    }
+
+    /**
+     * Construtor que recebe as coordenadas X e Y do objeto
+     *
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
+    public StaticElement(float x, float y, float width, float height, 
+            CollisionManager collisionManager, boolean justCheckFoot) {
+        super(width, height, collisionManager, justCheckFoot);
+        pos.x = x;
+        pos.y = y;
     }
 
     /**
@@ -32,23 +59,22 @@ public abstract class StaticElement extends SpacialElement {
      * @param height
      * @param pos
      */
-    public StaticElement(float width, float height, Vector2f pos) {
-        super(width, height);
-        this.pos = pos;
+    public StaticElement(float width, float height, Vector2f pos, 
+            CollisionManager collisionManager) {
+        this(width, width, width, height, collisionManager, false);
     }
 
     /**
-     * Construtor que recebe as coordenadas X e Y  do objeto
+     * Construtor que recebe as um vector2f com as coordenadas do objeto
      *
      * @param width
      * @param height
-     * @param x
-     * @param y
+     * @param pos
      */
-    public StaticElement(float x, float y, float width, float height) {
-        super(width, height);
-        pos.x = x;
-        pos.y = y;
+    public StaticElement(float width, float height, Vector2f pos, 
+            CollisionManager collisionManager, boolean justCheckFoot) {
+        super(width, height, collisionManager, justCheckFoot);
+        this.pos = pos;
     }
 
 }
